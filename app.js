@@ -1,29 +1,23 @@
+// Import the Express module
 const express = require('express');
+
+const path = require('path');
+
+// Create an instance of Express
 const app = express();
+// Define a port number , 3000 is default anyway
+const port = 3000;
+
 app.use(express.json())
 
 function handler(req,res) {
-	res.send(`<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minimal HTML</title>
-</head>
-
-<body>
-    <h1>Hello World Calum</h1>
-    
-
-</body>
-<script>
-    alert('Hello, World!');
-</script>
-</html>`)
+	//res.send("Hello world")
+    res.sendFile(path.join(__dirname, 'public', 'front.html'));
 }
 
-const fooHandler = (req,res) => res.send("From Foo")
 
+
+const fooHandler = (req,res) => res.send("From Foo")
 
 app.all('/', (req, res) => {
 
@@ -34,7 +28,6 @@ app.all('/', (req, res) => {
 });
 
 app.get('/test', handler)
-
 
 
 app.listen(3000, () => console.log('App running on port 3000'));
