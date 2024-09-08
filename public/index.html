@@ -10,9 +10,28 @@
     <h1>Hello World </h1>
     
     <button id="sendDataBtn">Send Data</button>
+    <ul id="dataList"></ul><!-- Empty list to display data -->
 
 <script>
     console.log("Front end working");
+
+    // Fetch data from the backend when the page loads
+    fetch('http://localhost:3000/test/data')
+        .then(response => response.json()) // Parse JSON from the response
+        .then(data => {
+            const dataList = document.getElementById('dataList');
+            console.log("receiving...")
+            console.log(data)
+
+            // Loop through the data and display each item in a list
+            data.forEach(item => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `Name: ${item.name}, Score: ${item.score}`; // Customize according to your data structure
+                dataList.appendChild(listItem);
+                console.log(item.name)
+            });
+        })
+        .catch(error => console.error('Hello, Error fetching data:', error));
 
     document.getElementById('sendDataBtn').addEventListener('click', () => {
         const dataToSend = {
@@ -38,13 +57,14 @@
         .then(response => response.json()) // Convert the response to JSON
         .then(data => {
             console.log(data); // Do something with the data
-            alert(data.results[1].name);
+            //alert(data.results[1].name);
         })
         .catch(error => {
             console.error('Error:', error); // Handle any errors
         });
 
-        
+    
+
 
     
 </script>

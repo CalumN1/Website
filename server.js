@@ -18,10 +18,7 @@ const mongoUri = process.env.MONGO_URI;  // Use the connection string from .env
 
 app.use(express.json())
 
-function handler(req,res) {
-	//res.send("Hello world")
-    res.sendFile(path.join(__dirname, 'public', 'front.html'));
-}
+
 
 // API route to receive data
 app.post('/api/data', (req, res) => {
@@ -39,7 +36,7 @@ app.post('/api/data', (req, res) => {
 //cluster database: user: calumnewton01   pw: U6ukCOS5cVmxKPu1
 
 
-const fooHandler = (req,res) => res.send("From Foo")
+//const fooHandler = (req,res) => res.send("From Foo")
 
 app.all('/', (req, res) => {
 
@@ -49,8 +46,56 @@ app.all('/', (req, res) => {
 
 });
 
-app.get('/test', handler)
+ function handler(req,res) {
+	//res.send("Hello world")
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+
+}
 
 
-app.listen(3000, () => console.log('App running on port 3000'));
+
+// Connect to MongoDB
+let db;
+MongoClient.connect(mongoUri, { })
+  .then(client => {
+    console.log('Connected to MongoDB');
+    db = client.db('Website');  // Replace with your database name
+
+    // Define routes after successful connection
+
+    // Example route to save data to the database
+    /* app.post('/data', (req, res) => {
+      const data = req.body;  // Get data from the client (front end)
+      db.collection('myCollection').insertOne(data)  // Insert data into collection
+        .then(result => res.send('Data saved successfully'))
+        .catch(error => res.status(500).send('Error saving data'));
+    }); */
+
+    // API route to get data from MongoDB
+    app.get('/test/data', async (req, res) => {
+        
+
+        try {
+          const data = await db.collection('HighScores').find().toArray(); // Replace 'myCollection' with your collection name
+          res.json(data);  // Send the data as a JSON response
+          console.log("DB data sent")
+        } catch (err) {
+          res.status(500).send('Error fetching data');
+          console.log("error caught 84")
+        }
+        
+    });
+
+    app.get('/test', handler)
+    
+
+    // Start the server after the database connection
+    app.listen(port, () => {
+      console.log(`Server running on http://localhost:${port}`);
+    });
+  })
+  .catch(error => console.error('Error connecting to MongoDB:', error));
+
+
+//app.listen(3000, () => console.log('App running on port 3000'));
 
