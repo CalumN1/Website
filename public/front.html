@@ -9,9 +9,44 @@
 <body>
     <h1>Hello World </h1>
     
+    <button id="sendDataBtn">Send Data</button>
 
-</body>
 <script>
-    //alert('Hello World!');
+    console.log("Front end working");
+
+    document.getElementById('sendDataBtn').addEventListener('click', () => {
+        const dataToSend = {
+            name: 'John Doe',
+            age: 25
+        };
+
+        // Send data to the back end using fetch (POST request)
+        fetch('http://localhost:3000/api/data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataToSend) // Convert JavaScript object to JSON
+        })
+        .then(response => response.json()) // Parse the JSON response
+        .then(data => console.log('Response from server:', data))
+        .catch(error => console.error('Error:', error));
+    });
+    
+
+    fetch('https://swapi.dev/api/people/')
+        .then(response => response.json()) // Convert the response to JSON
+        .then(data => {
+            console.log(data); // Do something with the data
+            alert(data.results[1].name);
+        })
+        .catch(error => {
+            console.error('Error:', error); // Handle any errors
+        });
+
+        
+
+    
 </script>
+</body>
 </html>
