@@ -46,12 +46,11 @@ app.all('/', (req, res) => {
 
 });
 
- function handler(req,res) {
+function handler(req,res) {
 	//res.send("Hello world")
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 
 }
-
 
 
 // Connect to MongoDB
@@ -76,15 +75,37 @@ MongoClient.connect(mongoUri, { })
         
 
         try {
-          const data = await db.collection('HighScores').find().toArray(); // Replace 'myCollection' with your collection name
+          const data = await db.collection('HighScores').find().sort({score: -1}).toArray(); // Replace 'myCollection' with your collection name
           res.json(data);  // Send the data as a JSON response
-          console.log("DB data sent")
+          console.log("High Score data sent")
         } catch (err) {
           res.status(500).send('Error fetching data');
           console.log("error caught 84")
         }
         
     });
+
+    // API route to save score
+    app.post('/test/save-score', async (req, res) => {
+        const { name, score } = req.body;
+        const currentDate = new Date();
+
+        // Document to insert into MongoDB
+        const newEntry = {
+            name: name,
+            score: score,
+            date: currentDate  // MongoDB will automatically store this as ISODate
+        };
+
+        try {
+          const result = await db.collection('HighScores').insertOne(newEntry);
+          res.json({ success: true, message: 'Score saved!' });
+          console.log("High Score Saved")
+        } catch (error) {
+          res.status(500).json({ success: false, message: 'Error saving score' });
+          console.log("Error saving score", currentDate)
+        }
+      });
 
     app.get('/test', handler)
     

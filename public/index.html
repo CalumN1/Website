@@ -4,22 +4,104 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Website HTML</title>
+    <style>
+        /*body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }*/
+
+        
+        #clicker {
+            padding: 10px 20px;
+            font-size: 1.5em;
+        }
+
+    </style>
 </head>
 
 <body>
     <h1>Hello World </h1>
     
-    <button id="sendDataBtn">Send Data</button>
-    <ul id="dataList"></ul><!-- Empty list to display data -->
+    <button id="sendDataBtn">Send Data</button> <br>
+    <button id="clicker">clicker</button> <button id="submit">Submit</button>
+    <div id="score">Clicker Score: 0</div>
+    <ul id="scoreList"></ul><!-- Empty list to display data -->
 
 <script>
     console.log("Front end working");
 
-    // Fetch data from the backend when the page loads
+    // Initialize the score
+    let score = 0;
+
+    // Get the button and score display elements
+    const scoreDisplay = document.getElementById('score');
+    //const clickButton = document.getElementById('clicker');
+    const Submit = document.getElementById('submit');
+
+    // Function to increase the score and update the display
+    clicker.addEventListener('click', () => {
+        score += 1;  // Increase score by 1 for each click
+        scoreDisplay.textContent = `Clicker Score: ${score}`;
+    });
+
+    // Function to submit the score and update the display
+    submit.addEventListener('click', () => {
+        const playerName = prompt('Enter your name:');  // Get player name
+        if (playerName) {
+            fetch('/test/save-score', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: playerName, score: score })
+
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Score saved successfully!');
+                } else {
+                    alert('Error saving score');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+
+
+        score = 0;  // reset score
+        scoreDisplay.textContent = `Clicker Score: ${score}`;
+
+        while (scoreList.hasChildNodes()) {
+            scoreList.removeChild(list.firstChild);
+        }
+
+        // Fetch highscores again to update them
+        fetch('http://localhost:3000/test/data')
+            .then(response => response.json()) // Parse JSON from the response
+            .then(data => {
+                const scoreList = document.getElementById('scoreList');
+                
+                
+
+                console.log("receiving...")
+                //console.log(data)
+
+                // Loop through the data and display each item in a list
+                data.forEach(item => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `Name: ${item.name}, Score: ${item.score}`; // Customize according to your data structure
+                    scoreList.appendChild(listItem);
+                    console.log(item.name)
+                });
+            })
+        .catch(error => console.error('Hello, Error fetching data:', error));
+    });
+
+
+    // Fetch highscores from the backend when the page loads
     fetch('http://localhost:3000/test/data')
         .then(response => response.json()) // Parse JSON from the response
         .then(data => {
-            const dataList = document.getElementById('dataList');
+            const scoreList = document.getElementById('scoreList');
             console.log("receiving...")
             console.log(data)
 
@@ -27,7 +109,7 @@
             data.forEach(item => {
                 const listItem = document.createElement('li');
                 listItem.textContent = `Name: ${item.name}, Score: ${item.score}`; // Customize according to your data structure
-                dataList.appendChild(listItem);
+                scoreList.appendChild(listItem);
                 console.log(item.name)
             });
         })
@@ -39,8 +121,8 @@
             age: 25
         };
 
-        // Send data to the back end using fetch (POST request)
-        fetch('http://localhost:3000/api/data', {
+    // Send data to the back end using fetch (POST request)
+    fetch('http://localhost:3000/api/data', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
