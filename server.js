@@ -7,17 +7,19 @@ const dotenv = require('dotenv');
 const path = require('path');
 
 // Load environment variables from the .env file
-dotenv.config();
+require('dotenv').config();
 
 // Create an instance of Express
 const app = express();
 // Define a port number , 3000 is default anyway
 const port = 3000;
-
+console.log(process.env.MONGO_URI);
 const mongoUri = process.env.MONGO_URI;  // Use the connection string from .env
 
 app.use(express.json())
 
+// Serve static files (like images) from the "public" folder
+app.use(express.static('public'));
 
 
 // API route to receive data
@@ -48,7 +50,13 @@ app.all('/', (req, res) => {
 
 function handler(req,res) {
 	//res.send("Hello world")
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'index.html'));
+
+}
+
+function testpagehandler(req,res) {
+	//res.send("Hello world")
+    res.sendFile(path.join(__dirname, 'testpage.html'));
 
 }
 
@@ -58,7 +66,7 @@ let db;
 MongoClient.connect(mongoUri, { })
   .then(client => {
     console.log('Connected to MongoDB');
-    db = client.db('Website');  // Replace with your database name
+    db = client.db('Website');  // database name
 
     // Define routes after successful connection
 
@@ -108,6 +116,8 @@ MongoClient.connect(mongoUri, { })
       });
 
     app.get('/test', handler)
+
+    app.get('/testpage', testpagehandler)
     
 
     // Start the server after the database connection
