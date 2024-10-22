@@ -1,12 +1,16 @@
 console.log("Front end working");
 
+//clicker
+
 // Initialize the score
 let score = 0;
 
 // Get the button and score display elements
 const scoreDisplay = document.getElementById('score');
 //const clickButton = document.getElementById('clicker');
-const Submit = document.getElementById('submit');
+const clickerSubmit = document.getElementById('clickerSubmit');
+
+const submit = document.getElementById('submit');
 
 // Function to increase the score and update the display
 clicker.addEventListener('click', () => {
@@ -15,7 +19,7 @@ clicker.addEventListener('click', () => {
 });
 
 // Function to submit the score and update the display
-submit.addEventListener('click', () => {
+clickerSubmit.addEventListener('click', () => {
     const playerName = prompt('Enter your name:');  // Get player name
     if (playerName) {
         fetch('/test/save-score', {
@@ -65,6 +69,7 @@ submit.addEventListener('click', () => {
         })
         .catch(error => console.error('Hello, Error fetching data:', error));
 });
+
 
 
 // Fetch highscores from the backend when the page loads

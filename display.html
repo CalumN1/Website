@@ -12,41 +12,34 @@
 <body>
     <!-- Parallax section -->
     <div class="parallax">
-        <div class="fixed-background">
-            <br>
-            <h1>Hello World </h1>
-            <img src="/images/armadillorun.jpg" alt="cant display image">
-            <div>
-                <h4>You are not logged in!</h2>
-            </div>
-            
+        <div class="navbar">
+
+            <button onclick="editRelationships()">Relationships</button>
+            <button onclick="mode = 'nodes'">Nodes</button>
+            <!-- <button onclick="ctx.strokeStyle = 'blue'">Blue</button>
+                <button onclick="ctx.strokeStyle = 'green'">Green</button>
+              
+                <button onclick="ctx.lineWidth = 2">Thin</button>
+                <button onclick="ctx.lineWidth = 5">Medium</button>
+                <button onclick="ctx.lineWidth = 10">Thick</button>
+                <button onclick="drawMode = 'line'">Line</button> -->
+
+            <button onclick="drawMode = 'circle'">Circle</button>
+
+            <button onclick="clickArea.innerHTML = ''; buttonCount = 0;">Clear</button>
         </div>
+        
+        <svg id="svgLayer">
+            <!--<circle cx="100" cy="100" r="100" stroke="black" stroke-width="3" fill="lightblue" /> -->
+        </svg>
+
+        
     </div>
 
     <!-- Regular content section -->
     <div class="content">
 
-        <button id="sendDataBtn">Send Data</button>
-        <br>
-        <button id="clicker">clicker</button>
-        <br>
-        <button id="clickerSubmit">Submit</button>
-        <div id="score">Clicker Score: 0</div>
-        <ul id="scoreList"></ul><!-- Empty list to display data -->
-
-        <form class="form-signin">
-            <div class="text-center mb-4">
-                <h1 class="h3 mb-3 font-weight-normal">Floating labels</h1>
-            </div>
-            <div class="form-label-group">
-                <label for="inputUsername">Username</label>
-            </div>
-
-
-
-
-        </form>
-        <script src="scripts/script.js"></script>
+        <script src="scripts/display.js"></script>
 
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
