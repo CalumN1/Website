@@ -14,8 +14,8 @@
     <div class="parallax">
         <div class="navbar">
 
-            <button onclick="editRelationships()">Relationships</button>
-            <button onclick="mode = 'nodes'">Nodes</button>
+            <button onclick="editRelationships()">Edit Mode On</button>
+            <button onclick="editOff()">Edit Mode Off</button>
             <!-- <button onclick="ctx.strokeStyle = 'blue'">Blue</button>
                 <button onclick="ctx.strokeStyle = 'green'">Green</button>
               
@@ -29,8 +29,8 @@
             <button onclick="clickArea.innerHTML = ''; buttonCount = 0;">Clear</button>
         </div>
         
-        <svg id="svgLayer">
-            <!--<circle cx="100" cy="100" r="100" stroke="black" stroke-width="3" fill="lightblue" /> -->
+        <svg id="svgLayer" onclick="drawCircle(event)">
+            
         </svg>
 
         
