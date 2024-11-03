@@ -1,16 +1,21 @@
 console.log("Front end working");
 
-
 // Counter to keep track of how many buttons have been created
-let buttonCount = 0;
-
-let mode = 'nodes'
+let nodeCounter = 0;
+let nodeDetails = []; //no
 
 const svgLayer = document.getElementById('svgLayer');
 
+const infoBox = document.getElementById('infoBox');
+const infoBoxContainer = document.getElementById('infoBoxContainer');
+
 // Function to add a circle to the SVG at the click position
-function drawCircle(event) {
+function drawCircle(event) {  //if in edit mode, need to add lines too
+    nodeCounter++;
+    const nodeNo = nodeCounter;
     const rect = svgLayer.getBoundingClientRect();
+    let hideTimeout;
+
     const x = event.clientX - rect.left; // Get x position relative to the SVG
     const y = event.clientY - rect.top;  // Get y position relative to the SVG
 
@@ -25,28 +30,74 @@ function drawCircle(event) {
 
     // Add a hover event listener to the new circle
     newCircle.addEventListener('mouseover', (event) => {
+        clearTimeout(hideTimeout);
+        const rect = svgLayer.getBoundingClientRect();
         newCircle.setAttribute('fill', 'green');
+        const a = newCircle.cx.baseVal.value - rect.left - infoBoxContainer.width.baseVal.value / 2 + newCircle.r.baseVal.value + 6;
+        const b = newCircle.cy.baseVal.value - rect.top - 70;
+
+
+
+        const newBox = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        newBox.setAttribute('points', "0,0 150,0 150,50 100,50 75,70 50,50 0,50");
+        newBox.setAttribute('class', "info-box.show")
+        newBox.setAttribute('id', `node${nodeNo}`);
+
+        //newBox.className = "info-box";
+        newBox.style.transform = `translate(${a}px, ${b}px)`;
+        newBox.setAttribute('fill', 'red');
+        newBox.setAttribute('stroke', 'black');
+        newBox.setAttribute('stroke-width', 2);
+
+        newBox.addEventListener('mouseover', (event) => {
+
+        });
+        newBox.addEventListener('mouseout', (event) => {
+
+        });
+
+        const newText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        newText.setAttribute('x', newCircle.cx.baseVal.value - rect.left - 21);
+        newText.setAttribute('y', newCircle.cy.baseVal.value - rect.top - 40);
+
+        //console.log(parseInt(newBox.id.slice(4))-1, nodeDetails.length)
+        //display name or node n
+        if (parseInt(newBox.id.slice(4)) - 1 < nodeDetails.length)
+            newText.innerHTML = nodeDetails[parseInt(newBox.id.slice(4)) - 1].name;
+        else
+            newText.innerHTML = newBox.id //node4
+
+        svgLayer.appendChild(newBox);
+        svgLayer.appendChild(newText);
+        event.stopImmediatePropagation();
     });
 
     newCircle.addEventListener('mouseout', (event) => {
         newCircle.setAttribute('fill', 'blue');
+        hideTimeout = setTimeout(() => {
+            const polygons = svgLayer.querySelectorAll('polygon');
+            const texts = svgLayer.querySelectorAll('text');
+            // Loop through each polygon and remove it
+            polygons.forEach(polygon => polygon.remove());
+            texts.forEach(text => text.remove()); // too broad, not working with the delay/animation
+            //removing last child twice cause them to stick sometimes
+
+        }, 100);
+
+
+        event.stopImmediatePropagation();
     });
 
     // Add a click event listener to the new circle
     newCircle.addEventListener('click', (event) => {
-        event.stopPropagation();
+        redirectToText(nodeNo);
+        event.stopImmediatePropagation();
         //alert('You clicked a circle!');
-        // Optional: Change the color of the circle when clicked
-        //newCircle.setAttribute('fill', 'blue');
-
     });
 
     // Append the new circle to the SVG layer
     svgLayer.appendChild(newCircle);
 }
-
-// Add an event listener to the SVG layer to draw a circle on click
-//svgLayer.addEventListener('click', drawCircle);
 
 function editRelationships() {
     const lines = svgLayer.querySelectorAll('line');
@@ -66,7 +117,7 @@ function editRelationships() {
     // Loop through each button and log its position
     nodes.forEach(node => {
         //console.log(node.cx.baseVal.value)
-        coordinates[counter] = parseInt(node.cx.baseVal.value); //to fix/check  parse Int
+        coordinates[counter] = parseInt(node.cx.baseVal.value);
         counter++
         coordinates[counter] = parseInt(node.cy.baseVal.value);
         counter++
@@ -157,19 +208,39 @@ function editOff() {
 
 }
 
-function Wobble() {
-    // Select all buttons within the clickArea
-    const buttons = clickArea.querySelectorAll('button');
+function redirectToText(nodeNo) {   
 
-    // Loop through each button and adjust its left position
-    buttons.forEach(button => {
-        // Get the current left position (remove 'px' and convert to a number)
-        const currentLeft = parseInt(button.style.left, 10);
-        // Set the new left position by adding the offset
-        //button.style.left = `${currentLeft + offset}px`;
-    });
+    console.log(nodeDetails[nodeNo-1].name)
 
-    //look into https://tympanus.net/codrops/2023/10/10/progressively-enhanced-webgl-lens-refraction/
+    // Encode the text to be URL-safe
+    const encodedText = encodeURIComponent(nodeDetails[nodeNo-1].name);
+
+    // Redirect to /display/encodedText
+    window.location.href = `/display/${encodedText}`;
 }
+
+// Fetch node from the backend when the page loads
+fetch('http://localhost:3000/display/data')
+    .then(response => response.json()) // Parse JSON from the response
+    .then(data => {
+        //const scoreList = document.getElementById('scoreList');
+        console.log("receiving...")
+        console.log(data)
+
+        // Loop through the data and display each item in a list
+        data.forEach((node, index) => {
+            const dummyEvent = { clientX: node.X, clientY: node.X }; // Example coordinates
+            drawCircle(dummyEvent);
+            const nodeInfo = { nodeid: nodeCounter, name: node.name }
+            nodeDetails[index] = nodeInfo;
+            //listItem.textContent = `Name: ${node.name}, Score: ${node.score}`; // Customize according to your data structure
+            //scoreList.appendChild(listItem);
+            console.log(node.name)
+        });
+    })
+    .catch(error => console.error('Hello, Error fetching data:', error));
+
+//look into https://tympanus.net/codrops/2023/10/10/progressively-enhanced-webgl-lens-refraction/
+
 
 

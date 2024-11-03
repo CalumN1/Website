@@ -131,3 +131,19 @@ h1 {
     background-color: #333;
     font-family: Arial;
 }
+
+/* animations */
+.info-box {
+    transform: translateY(30px);
+    opacity: 0;              /* Initially hidden */
+    visibility: visible;
+    transition: opacity 0.5s ease, transform 1s ease, visibility 0s 0.3s;
+}
+
+/* Hovering over the circle triggers this state */
+.info-box.show {
+    opacity: 1;              /* Fully visible */
+    transform: translateY(0); /* Moves into position */
+    visibility: visible;
+    transition: opacity 0.3s ease, transform 0.3s ease;    
+}

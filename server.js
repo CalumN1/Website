@@ -23,6 +23,8 @@ app.use(express.json())
 // Serve static files (like images) from the "public" folder
 app.use(express.static('public'));
 
+// Import the showMessage function
+const nodePagesController = require('./controllers/nodePagesController');
 
 // API route to receive data
 app.post('/api/data', (req, res) => {
@@ -93,6 +95,9 @@ MongoClient.connect(mongoUri, {})
     console.log('Connected to MongoDB');
     db = client.db('Website');  // database name
 
+    // Store the database connection in app.locals
+    app.locals.db = db;
+
     // Define routes after successful connection
 
     // Example route to save data to the database
@@ -106,9 +111,8 @@ MongoClient.connect(mongoUri, {})
     // API route to get data from MongoDB
     app.get('/test/data', async (req, res) => {
 
-
       try {
-        const data = await db.collection('HighScores').find().sort({ score: -1 }).toArray(); // Replace 'myCollection' with your collection name
+        const data = await db.collection('HighScores').find().sort({ score: -1 }).toArray();
         res.json(data);  // Send the data as a JSON response
         console.log("High Score data sent")
       } catch (err) {
@@ -117,6 +121,24 @@ MongoClient.connect(mongoUri, {})
       }
 
     });
+
+    // API route to get data from MongoDB
+    app.get('/display/data', async (req, res) => {
+
+      try {
+        const data = await db.collection('Nodes').find().toArray();
+        res.json(data);  // Send the data as a JSON response
+        console.log("Node data sent")
+      } catch (err) {
+        res.status(500).send('Error fetching data');
+        console.log("error caught 84")
+      }
+
+    });
+
+    // Dynamic route for /display/:text
+    // Define the route using the imported function as the handler
+    app.get('/display/:text', nodePagesController.showMessage);
 
     // API route to save score
     app.post('/test/save-score', async (req, res) => {
