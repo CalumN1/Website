@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Magic items</title>
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+  <link rel="stylesheet" href="/css/styles.css" rel="preload">
+</head>
+
+<body>
+
+  <div class="sidenav">
+    <ul id="list">
+
+    </ul>
+  </div>
+
+  <!-- Parallax section -->
+  <div class="parallax">
+    <br>
+    <br>
+    <div class="MIfixed-background">
+      <br>
+      <img id=image width="500" height="600"
+        src="https://i.pinimg.com/736x/af/18/06/af180654f14d30003b988dcc3eeb374a.jpg" alt="Image not found">
+      <h1 id=name contenteditable="true">Title Here</h1>
+      <p id=description contenteditable="true">Description Here</p>
+      <a href="/display">Go back</a>
+
+
+      
+    </div>
+    <br>
+    <br>
+  </div>
+
+  <!-- Regular content section -->
+  <div class="MIcontent">
+    <form action="/action_page.php">
+      <h1>New Item</h1>
+      <label for="newName">Item name:</label>
+      <br>
+      <input type="text" id="newName" name="newName" >
+      <br>
+      <label for="newDescription">Description:</label>
+      <br>
+      <input type="text" id="newDescription" name="newDescription" >
+      <br><br>
+      <input type="submit" value="Submit"><input type="reset" value="Reset">
+    </form>
+  </div>
+
+
+  <script src="scripts/magicItems.js"></script>
+</body>
+
+</html>

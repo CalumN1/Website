@@ -10,7 +10,6 @@ html {
 }
 
 
-
 /* Parallax Section */
 .parallax {
     /* Background image */
@@ -57,9 +56,26 @@ html {
 
 }
 
+/* Content Section */
+.MIcontent {
+    height: 600px;
+    background-color: rgb(167, 105, 105);
+    padding: 20px;
+
+}
+
 .fixed-background {
     height: 800px;
     transform: translate(50%, 10%);
+    width: 50%;
+    background-color: rgb(224, 224, 224);
+    background-position: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.MIfixed-background {
+    height: 800px;
+    transform: translate(50%, 0%);
     width: 50%;
     background-color: rgb(224, 224, 224);
     background-position: center;
@@ -147,3 +163,14 @@ h1 {
     visibility: visible;
     transition: opacity 0.3s ease, transform 0.3s ease;    
 }
+
+.sidenav {
+    
+    position: fixed;
+    z-index: 1;
+    top: 20px;
+    left: 10px;
+    background: #eee;
+    overflow-x: hidden;
+    padding: 8px 0;
+  }

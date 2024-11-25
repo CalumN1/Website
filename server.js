@@ -81,7 +81,13 @@ function displayHandler(req, res) {
 
 }
 
-function testpagehandler(req, res) {
+function magicItemsHandler(req, res) {
+  //res.send("Hello world")
+  res.sendFile(path.join(__dirname, 'magicItems.html'));
+
+}
+
+function testpageHandler(req, res) {
   //res.send("Hello world")
   res.sendFile(path.join(__dirname, 'testpage.html'));
 
@@ -122,7 +128,7 @@ MongoClient.connect(mongoUri, {})
 
     });
 
-    // API route to get data from MongoDB
+    // API route to get display nodes data from MongoDB
     app.get('/display/data', async (req, res) => {
 
       try {
@@ -162,13 +168,29 @@ MongoClient.connect(mongoUri, {})
       }
     });
 
+    // API route to get display magic Item data from MongoDB
+    app.get('/magicItems/data', async (req, res) => {
+
+      try {
+        const data = await db.collection('MagicItems').find().toArray();
+        res.json(data);  // Send the data as a JSON response
+        console.log("Node data sent")
+      } catch (err) {
+        res.status(500).send('Error fetching data');
+        console.log("error caught 84")
+      }
+
+    });
+
     app.get('/home', homeHandler)
 
     app.get('/login', loginHandler)
 
     app.get('/display', displayHandler)
 
-    app.get('/testpage', testpagehandler)
+    app.get('/testpage', testpageHandler)
+
+    app.get('/magicItems', magicItemsHandler)
 
 
     // Start the server after the database connection
